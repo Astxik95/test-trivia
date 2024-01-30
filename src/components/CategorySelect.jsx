@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Select from 'react-select';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
     control: (baseStyles, state) => ({
@@ -46,6 +46,7 @@ const styles = {
 }
 
 const CategorySelect = () => {
+    const history = useNavigate();
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const categoriesOptions = categories.map((item) => ({
@@ -66,6 +67,10 @@ const CategorySelect = () => {
         fetchCategories();
     }, []);
 
+    const handleStart = () => {
+        history(`/questions/${selectedCategory?.label?.toLowerCase()}/${selectedCategory?.value}`)
+    }
+
 
     return (
         <div className="flex flex-col items-center">
@@ -79,12 +84,13 @@ const CategorySelect = () => {
                 placeholder="Category"
                 styles={styles}
             />
-            <Link
-                to={`/questions/${selectedCategory?.label?.toLowerCase()}/${selectedCategory?.value}`}
-                className="flex justify-center items-center mt-[99px] py-4 px-5 bg-green text-white w-[150px] h-14 rounded-[18px] text-lg font-bold"
+            <button
+                onClick={handleStart}
+                disabled={!selectedCategory}
+                className="flex justify-center items-center mt-[99px] py-4 px-5 bg-green text-white w-[150px] h-14 rounded-[18px] text-lg font-bold disabled:bg-light-gray disabled:text-silver"
             >
                 Start
-            </Link>
+            </button>
         </div>
     )
 }
